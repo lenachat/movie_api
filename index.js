@@ -6,17 +6,49 @@ const app = express();
 
 let topMovies = [
   {
-    title: 'Harry Potter and the Sorcerer\'s Stone',
-    author: 'J.K. Rowling'
+    title: 'Hidden Figures',
+    director: 'Theodore Melfi'
   },
   {
-    title: 'Lord of the Rings',
-    author: 'J.R.R. Tolkien'
+    title: 'Forrest Gump',
+    director: 'Robert Zemeckis'
   },
   {
-    title: 'Twilight',
-    author: 'Stephanie Meyer'
-  }
+    title: 'Inception',
+    director: 'Christopher Nolan'
+  },
+  {
+    title: 'The Help',
+    director: 'Tate Taylor'
+  },
+  {
+    title: 'Interstellar',
+    director: 'Christopher Nolan'
+  },
+  {
+    title: '8 Mile',
+    director: 'Curtis Hanson'
+  },
+  {
+    title: 'The Untouchables',
+    director: 'Olivier Nakache, Éric Toledano'
+  },
+  {
+    title: 'The Wolf of Wall Street',
+    director: 'Martin Scorsese'
+  },
+  {
+    title: 'Barbie',
+    director: 'Greta Gerwig'
+  },
+  {
+    title: 'Top Gun',
+    director: 'Tony Scott, Joseph Kosinski'
+  },
+  {
+    title: 'The Greatest Showman',
+    director: 'Michael Gracey'
+  },
 ];
 
 app.use(morgan('common'));
