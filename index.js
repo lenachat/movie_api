@@ -4,50 +4,147 @@ const express = require('express'),
 
 const app = express();
 
+let users = [
+  {
+    id: 1,
+    username: 'John',
+    email: 'john.doe@gmail.com'
+  }
+];
+
 let topMovies = [
   {
     title: 'Hidden Figures',
-    director: 'Theodore Melfi'
+    director: {
+      name: 'Theodore Melfi',
+      biography: '',
+      birth: ''
+    },
+    genre: {
+      name: 'Drama',
+      description: ''
+    }
   },
   {
     title: 'Forrest Gump',
-    director: 'Robert Zemeckis'
+    director: {
+      name: 'Robert Zemeckis',
+      biography: '',
+      birth: ''
+    },
+    genre: {
+      name: 'Adventure',
+      description: ''
+    }
   },
   {
     title: 'Inception',
-    director: 'Christopher Nolan'
+    director: {
+      name: 'Christopher Nolan',
+      biography: '',
+      birth: ''
+    },
+    genre: {
+      name: 'Science-Fiction',
+      description: ''
+    }
   },
   {
     title: 'The Help',
-    director: 'Tate Taylor'
+    director: {
+      name: 'Tate Taylor',
+      biography: '',
+      birth: ''
+    },
+    genre: {
+      name: 'Drama',
+      description: ''
+    }
   },
   {
     title: 'Interstellar',
-    director: 'Christopher Nolan'
+    director: {
+      name: 'Christopher Nolan',
+      biography: '',
+      birth: ''
+    },
+    genre: {
+      name: 'Science-Fiction',
+      description: ''
+    }
   },
   {
     title: '8 Mile',
-    director: 'Curtis Hanson'
+    director: 'Curtis Hanson',
+    director: {
+      name: 'Curtis Hanson',
+      biography: '',
+      birth: ''
+    },
+    genre: {
+      name: 'Music',
+      description: ''
+    }
   },
   {
-    title: 'The Untouchables',
-    director: 'Olivier Nakache, Éric Toledano'
+    title: 'Intouchables',
+    director: {
+      name: 'Olivier Nakache, Éric Toledano',
+      biography: '',
+      birth: ''
+    },
+    genre: {
+      name: 'Tragicomedy',
+      description: ''
+    }
   },
   {
     title: 'The Wolf of Wall Street',
-    director: 'Martin Scorsese'
+    director: {
+      name: 'Martin Scorsese',
+      biography: '',
+      birth: ''
+    },
+    genre: {
+      name: 'Biography',
+      description: ''
+    }
   },
   {
     title: 'Barbie',
-    director: 'Greta Gerwig'
+    director: {
+      name: 'Greta Gerwig',
+      biography: '',
+      birth: ''
+    },
+    genre: {
+      name: 'Comedy',
+      description: ''
+    }
   },
   {
     title: 'Top Gun',
-    director: 'Tony Scott, Joseph Kosinski'
+    director: {
+      name: 'Tony Scott, Joseph Kosinski',
+      biography: '',
+      birth: ''
+    },
+    genre: {
+      name: 'Action',
+      description: ''
+    }
   },
   {
     title: 'The Greatest Showman',
-    director: 'Michael Gracey'
+    director: {
+      name: 'Michael Gracey',
+      biography: '',
+      birth: ''
+    },
+    genre: {
+      name: 'Musical',
+      description: ''
+    }
   },
 ];
 
@@ -55,13 +152,54 @@ app.use(morgan('common'));
 
 app.use(express.static('public'));
 
-// GET requests
+// Welcome
 app.get('/', (req, res) => {
   res.send('Welcome! MovieMate is your ultimate companion for exploring the world of cinema!');
 });
 
+// get complete movie list
 app.get('/movies', (req, res) => {
-  res.json(topMovies);
+  res.status(200).json(topMovies);
+});
+
+// get movie info
+app.get('/movies/:movieTitle', (req, res) => {
+  res.status(200).send('Returns data on a single movie with [movieTitle]');
+});
+
+// get genre info
+app.get('/movies/genre/:genreName', (req, res) => {
+  res.send('Returns description about a genre with [genreName] ');
+});
+
+// get director info
+app.get('/movies/director/:directorName', (req, res) => {
+  res.send('Returns data about a director with [directorName]');
+});
+
+// register new user
+app.post('/users', (req, res) => {
+  res.send('User has been registered.')
+});
+
+// update username
+app.put('/users/:id/:username', (req, res) => {
+  res.send('Username has been updated.')
+});
+
+// add movie to favorites
+app.post('/users/:id/favorites/:movieTitle', (req, res) => {
+  res.send('Movie has been added to favorites.')
+});
+
+// remove movie from favorites
+app.delete('/users/:id/favorites/:movieTitle', (req, res) => {
+  res.send('Movie has been removed from favorites.')
+});
+
+// deregister user
+app.delete('/users/:id', (req, res) => {
+  res.send('User has been removed.')
 });
 
 // error handling

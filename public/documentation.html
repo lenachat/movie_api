@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../styles.css">
   <title>MovieMate</title>
 </head>
 
@@ -30,6 +31,136 @@
   </ul>
   Join MovieMate today and transform the way you experience movies!
   </p>
+
+  <h2>Documentation Table</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Business Logic</th>
+        <th>URL</th>
+        <th>Query Parameters</th>
+        <th>HTTP Method</th>
+        <th>Request Body Data</th>
+        <th>Response Body Data</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Return a list of all movies to the user</td>
+        <td>/movies</td>
+        <td>None</td>
+        <td>GET</td>
+        <td>None</td>
+        <td>A JSON object holding data about all movies</td>
+      </tr>
+      <tr>
+        <td>Return data (description, genre, director, image URL,
+          whether it's featured or not) about a single movie by title to the user</td>
+        <td>/movies/:title</td>
+        <td>The title of the movie (:title) of which the data is returned</td>
+        <td>GET</td>
+        <td>None</td>
+        <td>
+          A JSON object holding data about a specific movie containing title, director(s) and genre. Example: <br>
+          {
+          title: "Hidden Figures",
+          director: {
+          name: "Theodore Melfi",
+          biography: "",
+          birth: ""
+          },
+          genre: {
+          name: "Drama",
+          description: ""
+          }
+          }
+        </td>
+      </tr>
+      <tr>
+        <td>Return data about a genre (description) by name</td>
+        <td>/movies/genre/:name</td>
+        <td>The name of the genre (:name) of which the description is returned</td>
+        <td>GET</td>
+        <td>None</td>
+        <td>
+          A JSON object containing a description about a specific genre. Example: <br>
+          genre: {
+          name: "Drama",
+          description: ""
+          }
+        </td>
+      </tr>
+      <tr>
+        <td>Return data about a director (biography and birth year) by name</td>
+        <td>/movies/director/:name</td>
+        <td>The name of the director (:name) of which the data is returned</td>
+        <td>GET</td>
+        <td>None</td>
+        <td>
+          A JSON object containing data about a director. Example: <br>
+          director: {
+          name: "Theodore Melfi",
+          biography: "",
+          birth: ""
+          }
+        </td>
+      </tr>
+      <tr>
+        <td>Allow new users to register</td>
+        <td>/users</td>
+        <td>None</td>
+        <td>POST</td>
+        <td>
+          A JSON object holding data about the user to add, including username and email address. Example: <br>
+          {
+          username: "John",
+          email: "john.doe@gmail.com"
+          }
+        </td>
+        <td>
+          A JSON object holding the data about the user that was added, including an ID: <br>
+          {
+          id: 1,
+          username: "John",
+          email: "john.doe@gmail.com"
+          }
+        </td>
+      </tr>
+      <tr>
+        <td>Allow users to update their username</td>
+        <td>/users/:id/:username</td>
+        <td>The user ID (:id) and a new username (:username) to which the current username should be changed</td>
+        <td>PUT</td>
+        <td>None</td>
+        <td>A text message indicating that the username was updated</td>
+      </tr>
+      <tr>
+        <td>Allow users to add a movie to their list of favorites</td>
+        <td>/users/:id/favorites/:title</td>
+        <td>The user ID (:id) on whos favorites list the movie with :title to add</td>
+        <td>POST</td>
+        <td>None</td>
+        <td>A text message indicating that a movie was added to the list of favorites</td>
+      </tr>
+      <tr>
+        <td>Allow users to remove a movie from their list of favorites</td>
+        <td>/users/:id/favorites/:title</td>
+        <td>The user ID (:id) on whos favorites list the movie with :title to delete</td>
+        <td>DELETE</td>
+        <td>None</td>
+        <td>A text message indicating that a movie was deleted from the list of favorites</td>
+      </tr>
+      <tr>
+        <td>Allow existing users to deregister</td>
+        <td>/users/:id</td>
+        <td>The user ID (:id) of the user to deregister</td>
+        <td>DELETE</td>
+        <td>None</td>
+        <td>A text message indicating that a user was deregistered from the platform</td>
+      </tr>
+    </tbody>
+  </table>
+
 
 </body>
 
