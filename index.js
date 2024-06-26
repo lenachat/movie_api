@@ -1,156 +1,22 @@
 const express = require('express'),
   morgan = require('morgan'),
-  path = require('path');
+  path = require('path'),
+  mongoose = require('mongoose');
+
+const models = require('./models.js');
+
+const movies = models.movie,
+  users = models.user;
+
+mongoose.connect('mongodb://localhost:27017/moviemateDB',
+  { useNewUrlParser: true, useUnifiedTopology: true });
 
 const app = express();
 
-let users = [
-  {
-    id: 1,
-    username: 'John',
-    email: 'john.doe@gmail.com'
-  }
-];
-
-let topMovies = [
-  {
-    title: 'Hidden Figures',
-    director: {
-      name: 'Theodore Melfi',
-      biography: '',
-      birth: ''
-    },
-    genre: {
-      name: 'Drama',
-      description: ''
-    }
-  },
-  {
-    title: 'Forrest Gump',
-    director: {
-      name: 'Robert Zemeckis',
-      biography: '',
-      birth: ''
-    },
-    genre: {
-      name: 'Adventure',
-      description: ''
-    }
-  },
-  {
-    title: 'Inception',
-    director: {
-      name: 'Christopher Nolan',
-      biography: '',
-      birth: ''
-    },
-    genre: {
-      name: 'Science-Fiction',
-      description: ''
-    }
-  },
-  {
-    title: 'The Help',
-    director: {
-      name: 'Tate Taylor',
-      biography: '',
-      birth: ''
-    },
-    genre: {
-      name: 'Drama',
-      description: ''
-    }
-  },
-  {
-    title: 'Interstellar',
-    director: {
-      name: 'Christopher Nolan',
-      biography: '',
-      birth: ''
-    },
-    genre: {
-      name: 'Science-Fiction',
-      description: ''
-    }
-  },
-  {
-    title: '8 Mile',
-    director: 'Curtis Hanson',
-    director: {
-      name: 'Curtis Hanson',
-      biography: '',
-      birth: ''
-    },
-    genre: {
-      name: 'Music',
-      description: ''
-    }
-  },
-  {
-    title: 'Intouchables',
-    director: {
-      name: 'Olivier Nakache, Éric Toledano',
-      biography: '',
-      birth: ''
-    },
-    genre: {
-      name: 'Tragicomedy',
-      description: ''
-    }
-  },
-  {
-    title: 'The Wolf of Wall Street',
-    director: {
-      name: 'Martin Scorsese',
-      biography: '',
-      birth: ''
-    },
-    genre: {
-      name: 'Biography',
-      description: ''
-    }
-  },
-  {
-    title: 'Barbie',
-    director: {
-      name: 'Greta Gerwig',
-      biography: '',
-      birth: ''
-    },
-    genre: {
-      name: 'Comedy',
-      description: ''
-    }
-  },
-  {
-    title: 'Top Gun',
-    director: {
-      name: 'Tony Scott, Joseph Kosinski',
-      biography: '',
-      birth: ''
-    },
-    genre: {
-      name: 'Action',
-      description: ''
-    }
-  },
-  {
-    title: 'The Greatest Showman',
-    director: {
-      name: 'Michael Gracey',
-      biography: '',
-      birth: ''
-    },
-    genre: {
-      name: 'Musical',
-      description: ''
-    }
-  },
-];
-
 app.use(morgan('common'));
-
 app.use(express.static('public'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: ture }));
 
 // Welcome
 app.get('/', (req, res) => {
