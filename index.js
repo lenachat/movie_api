@@ -1,14 +1,14 @@
 const express = require('express'),
   morgan = require('morgan'),
-  path = require('path'),
-  mongoose = require('mongoose');
+  path = require('path');
 
+const mongoose = require('mongoose');
 const models = require('./models.js');
 
-const movies = models.movie,
-  users = models.user;
+const movies = models.movie;
+const users = models.user;
 
-mongoose.connect('mongodb://localhost:27017/moviemateDB',
+mongoose.connect('mongodb://127.0.0.1:27017/moviemateDB',
   { useNewUrlParser: true, useUnifiedTopology: true });
 
 const app = express();
@@ -16,7 +16,7 @@ const app = express();
 app.use(morgan('common'));
 app.use(express.static('public'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: ture }));
+app.use(express.urlencoded({ extended: true }));
 
 // Welcome
 app.get('/', (req, res) => {
@@ -24,23 +24,47 @@ app.get('/', (req, res) => {
 });
 
 // get complete movie list
-app.get('/movies', (req, res) => {
-  res.status(200).json(topMovies);
+app.get('/movies', async (req, res) => {
+  movies.find()
+    .then((movies) => {
+      res.status(200).json(movies);
+    }).catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
 });
 
 // get movie info
-app.get('/movies/:movieTitle', (req, res) => {
-  res.status(200).send('Returns data on a single movie with [movieTitle]');
+app.get('/movies/:title', async (req, res) => {
+  await movies.findOne({ title: req.params.title })
+    .then((movie) => {
+      res.status(200).json(movie);
+    }).catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
 });
 
 // get genre info
-app.get('/movies/genre/:genreName', (req, res) => {
-  res.send('Returns description about a genre with [genreName] ');
+app.get('/movies/genre/:name', async (req, res) => {
+  await movies.findOne({ "genre.name": req.params.name })
+    .then((movies) => {
+      res.status(200).json(movies.genre.description);
+    }).catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
 });
 
 // get director info
-app.get('/movies/director/:directorName', (req, res) => {
-  res.send('Returns data about a director with [directorName]');
+app.get('/movies/director/:name', async (req, res) => {
+  await movies.findOne({ "director.name": req.params.name })
+    .then((movies) => {
+      res.status(200).json(movies.director);
+    }).catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
 });
 
 // register new user
