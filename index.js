@@ -68,28 +68,107 @@ app.get('/movies/director/:name', async (req, res) => {
 });
 
 // register new user
-app.post('/users', (req, res) => {
-  res.send('User has been registered.')
+app.post('/users', async (req, res) => {
+  await users.findOne({ username: req.body.username })
+    .then((user) => {
+      if (user) {
+        return res.status(400).send(req.body.username + ' already exists.');
+      } else {
+        users.create({
+          username: req.body.username,
+          password: req.body.password,
+          email: req.body.email,
+          birthday: req.body.birthday
+        })
+          .then((user) => {
+            res.status(200).json(user);
+          })
+          .catch((err) => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+          });
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
 });
 
 // update username
-app.put('/users/:id/:username', (req, res) => {
-  res.send('Username has been updated.')
+// app.put('/users/:id/:username', async (req, res) => {
+//   await users.findOneAndUpdate(
+//     { _id: req.params.id },
+//     { $set: { username: req.params.username } },
+//     { new: true }
+//   ).then((updatedUser) => {
+//     res.status(200).json(updatedUser);
+//   })
+//     .catch((err) => {
+//       console.error(err);
+//       res.status(500).send('Error: ' + err);
+//     })
+// });
+
+app.put('/users/:id', async (req, res) => {
+  await users.findOneAndUpdate(
+    { _id: req.params.id },
+    {
+      $set: {
+        username: req.body.username,
+        password: req.body.password,
+        email: req.body.email,
+        birthday: req.body.birthday
+      }
+    },
+    { new: true }
+  ).then((updatedUser) => {
+    res.status(200).json(updatedUser);
+  })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    })
 });
 
 // add movie to favorites
-app.post('/users/:id/favorites/:movieTitle', (req, res) => {
-  res.send('Movie has been added to favorites.')
+app.post('/users/:id/favorites/:movieId', async (req, res) => {
+  await users.findOneAndUpdate(
+    { _id: req.params.id },
+    { $push: { favorites: req.params.movieId } },
+    { new: true }
+  ).then((updatedUser) => {
+    res.status(200).json(updatedUser);
+  })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    })
 });
 
 // remove movie from favorites
-app.delete('/users/:id/favorites/:movieTitle', (req, res) => {
-  res.send('Movie has been removed from favorites.')
+app.delete('/users/:id/favorites/:movieId', async (req, res) => {
+  await users.findOneAndUpdate({ _id: req.params.id },
+    { $pull: { favorites: req.params.movieId } },
+    { new: true }
+  ).then((updatedUser) => {
+    res.status(200).json(updatedUser);
+  })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    })
 });
 
 // deregister user
-app.delete('/users/:id', (req, res) => {
-  res.send('User has been removed.')
+app.delete('/users/:id', async (req, res) => {
+  await users.findOneAndDelete({ _id: req.params.id }).then((user) => {
+    res.status(200).send('User was deleted.');
+  })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    })
 });
 
 // error handling
