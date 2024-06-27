@@ -61,18 +61,28 @@
         <td>GET</td>
         <td>None</td>
         <td>
-          A JSON object holding data about a specific movie containing title, director(s) and genre. Example: <br>
-          {
-          title: "Hidden Figures",
-          director: {
-          name: "Theodore Melfi",
-          biography: "",
-          birth: ""
-          },
-          genre: {
-          name: "Drama",
-          description: ""
-          }
+          A JSON object holding data about a specific movie containing title, director, genre, actors and an ID.
+          Example: <br>
+          { <br>
+          "_id": "34576498fh3945hv039h2" <br>
+          "title": "Hidden Figures", <br>
+          "director": <br>
+          { <br>
+          "name": "Theodore Melfi", <br>
+          "biography": "Theodore Melfi is an American film director, screenwriter, and producer known for his work on
+          the films \"St. Vincent\" and \"Hidden Figures\".", <br>
+          "birth": "1970", <br>
+          "death": " " <br>
+          }, <br>
+          "actors": ["Taraji P. Henson", "Octavia Spencer", "Janelle Monáe"], <br>
+          "genre": <br>
+          { <br>
+          "name": "Drama", <br>
+          "description":
+          "Drama is a film genre that emphasizes realistic storytelling and character development,
+          often dealing with serious, emotional, and thought-provoking themes. It focuses on the internal and external
+          conflicts of characters, aiming to evoke a strong emotional response from the audience." <br>
+          } <br>
           }
         </td>
       </tr>
@@ -83,25 +93,27 @@
         <td>GET</td>
         <td>None</td>
         <td>
-          A JSON object containing a description about a specific genre. Example: <br>
-          genre: {
-          name: "Drama",
-          description: ""
-          }
+          A string containing a description about a specific genre. Example for genre Drama: <br>
+          "Drama is a film genre that emphasizes realistic storytelling and character development,
+          often dealing with serious, emotional, and thought-provoking themes. It focuses on the internal and external
+          conflicts of characters, aiming to evoke a strong emotional response from the audience."
         </td>
       </tr>
       <tr>
         <td>Return data about a director (biography and birth year) by name</td>
         <td>/movies/director/:name</td>
-        <td>The name of the director (:name) of which the data is returned</td>
+        <td>The name of the director of which to receive data.</td>
         <td>GET</td>
         <td>None</td>
         <td>
           A JSON object containing data about a director. Example: <br>
-          director: {
-          name: "Theodore Melfi",
-          biography: "",
-          birth: ""
+          director: <br>
+          { <br>
+          "name": "Theodore Melfi", <br>
+          "biography": "Theodore Melfi is an American film director, screenwriter, and producer known for his work on
+          the films \"St. Vincent\" and \"Hidden Figures\".", <br>
+          "birth": "1970", <br>
+          "death": " " <br>
           }
         </td>
       </tr>
@@ -111,48 +123,90 @@
         <td>None</td>
         <td>POST</td>
         <td>
-          A JSON object holding data about the user to add, including username and email address. Example: <br>
-          {
-          username: "John_Doe",
-          password: "mypassword123"
-          email: "john.doe@gmail.com",
-          birthday: "1990-03-17"
+          A JSON object holding data about the user to add, including username, password, email address and birthday.
+          Example: <br>
+          { <br>
+          "username": "Enisa", <br>
+          "password": "14578", <br>
+          "email": "enisa@gmail.com", <br>
+          "birthday": "1985-10-02" <br>
           }
         </td>
         <td>
-          A JSON object holding the data about the user that was added, including an ID: <br>
-          {
-          id: 1,
-          username: "John_Doe",
-          password: "mypassword123"
-          email: "john.doe@gmail.com",
-          birthday: "1990-03-17"
+          A JSON object holding the data about the user that was added, including an ID and an empty list of favorite
+          movies. Example: <br>
+          { <br>
+          "_id": "667d2898ce584ed14052eff8", <br>
+          "username": "Enisa", <br>
+          "password": "14578", <br>
+          "email": "enisa@gmail.com", <br>
+          "birthday": "1985-10-02T00:00:00.000Z", <br>
+          "favorites": [] <br>
           }
         </td>
       </tr>
       <tr>
-        <td>Allow users to update their username</td>
-        <td>/users/:id/:username</td>
-        <td>The user ID (:id) and a username (:username) to which the current username is to be changed</td>
+        <td>Allow users to update their user information</td>
+        <td>/users/:id</td>
+        <td>The user ID (:id) of the user whose information is to be changed.</td>
         <td>PUT</td>
-        <td>None</td>
-        <td>A text message indicating that the username was updated</td>
+        <td>The new user information that is to be saved. Example: <br>
+          { <br>
+          "username": "newUsername", <br>
+          "password": "myNewPassword", <br>
+          "email": "new.email@gmail.com", <br>
+          "birthday": "1990-03-17" <br>
+          }
+        </td>
+        <td>A JSON object with the new information about the user. Example: <br>
+          { <br>
+          "_id": "667d2898ce584ed14052eff8", <br>
+          "username": "newUsername", <br>
+          "password": "myNewPassword", <br>
+          "email": "new.email@gmail.com", <br>
+          "birthday": "1990-03-17T00:00:00.000Z", <br>
+          "favorites": [] <br>
+          }
+        </td>
       </tr>
       <tr>
-        <td>Allow users to add a movie to their list of favorites</td>
-        <td>/users/:id/favorites/:title</td>
-        <td>The user ID (:id) whose favorites list will have a specific movie with title (:title) added</td>
+        <td>Allow users to add a movie to their list of favorites by the movie ID</td>
+        <td>/users/:id/favorites/:movieID</td>
+        <td>The user ID (:id) whose favorites list will have a specific movie with the movie ID (:movieID) added.</td>
         <td>POST</td>
         <td>None</td>
-        <td>A text message indicating that a movie was added to the list of favorites</td>
+        <td>A JSON object of the user with its information including the new added movie in the favorites list. Example:
+          <br>
+          { <br>
+          "_id": "667d2898ce584ed14052eff8", <br>
+          "username": "Enisa", <br>
+          "password": "14578", <br>
+          "email": "enisa@gmail.com", <br>
+          "birthday": "1985-10-02T00:00:00.000Z", <br>
+          "favorites": [
+          "667ab189d2e4f08e1b79c88b"
+          ] <br>
+          }
+        </td>
       </tr>
       <tr>
         <td>Allow users to remove a movie from their list of favorites</td>
-        <td>/users/:id/favorites/:title</td>
+        <td>/users/:id/favorites/:movieID</td>
         <td>The user ID (:id) on whos favorites list the movie with :title to delete</td>
         <td>DELETE</td>
         <td>None</td>
-        <td>A text message indicating that a movie was deleted from the list of favorites</td>
+        <td>A JSON object indicating that a movie was deleted from the list of favorites. Example: <br>
+          { <br>
+          "_id": "667d2898ce584ed14052eff8", <br>
+          "username": "Enisa", <br>
+          "password": "14578", <br>
+          "email": "enisa@gmail.com", <br>
+          "birthday": "1985-10-02T00:00:00.000Z", <br>
+          "favorites": [
+          "667ab189d2e4f08e1b79c88b"
+          ] <br>
+          }
+        </td>
       </tr>
       <tr>
         <td>Allow existing users to deregister</td>
