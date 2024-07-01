@@ -20,7 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 
 let auth = require('./auth')(app);
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
 
 const passport = require('passport');
 require('./passport');
@@ -31,7 +31,7 @@ app.get('/', (req, res) => {
 });
 
 // get complete movie list
-app.get('/movies', async (req, res) => {
+app.get('/movies', passport.authenticate('jwt', { session: false }), async (req, res) => {
   movies.find()
     .then((movies) => {
       res.status(200).json(movies);
@@ -42,7 +42,7 @@ app.get('/movies', async (req, res) => {
 });
 
 // get movie info
-app.get('/movies/:title', async (req, res) => {
+app.get('/movies/:title', passport.authenticate('jwt', { session: false }), async (req, res) => {
   await movies.findOne({ title: req.params.title })
     .then((movie) => {
       res.status(200).json(movie);
@@ -53,7 +53,7 @@ app.get('/movies/:title', async (req, res) => {
 });
 
 // get genre info
-app.get('/movies/genre/:name', async (req, res) => {
+app.get('/movies/genre/:name', passport.authenticate('jwt', { session: false }), async (req, res) => {
   await movies.findOne({ "genre.name": req.params.name })
     .then((movies) => {
       res.status(200).json(movies.genre.description);
@@ -64,7 +64,7 @@ app.get('/movies/genre/:name', async (req, res) => {
 });
 
 // get director info
-app.get('/movies/director/:name', async (req, res) => {
+app.get('/movies/director/:name', passport.authenticate('jwt', { session: false }), async (req, res) => {
   await movies.findOne({ "director.name": req.params.name })
     .then((movies) => {
       res.status(200).json(movies.director);
@@ -102,22 +102,13 @@ app.post('/users', async (req, res) => {
     });
 });
 
-// update username
-// app.put('/users/:id/:username', async (req, res) => {
-//   await users.findOneAndUpdate(
-//     { _id: req.params.id },
-//     { $set: { username: req.params.username } },
-//     { new: true }
-//   ).then((updatedUser) => {
-//     res.status(200).json(updatedUser);
-//   })
-//     .catch((err) => {
-//       console.error(err);
-//       res.status(500).send('Error: ' + err);
-//     })
-// });
+app.put('/users/:id', passport.authenticate('jwt', { session: false }), async (req, res) => {
 
-app.put('/users/:id', async (req, res) => {
+  //condition to check if user changes its own data only
+  if (req.user.id !== req.params.id) {
+    return res.status(400).send('Permission denied');
+  }
+
   await users.findOneAndUpdate(
     { _id: req.params.id },
     {
@@ -139,7 +130,13 @@ app.put('/users/:id', async (req, res) => {
 });
 
 // add movie to favorites
-app.post('/users/:id/favorites/:movieId', async (req, res) => {
+app.post('/users/:id/favorites/:movieId', passport.authenticate('jwt', { session: false }), async (req, res) => {
+
+  //condition to check if user changes its own data only
+  if (req.user.id !== req.params.id) {
+    return res.status(400).send('Permission denied');
+  }
+
   await users.findOneAndUpdate(
     { _id: req.params.id },
     { $push: { favorites: req.params.movieId } },
@@ -154,7 +151,13 @@ app.post('/users/:id/favorites/:movieId', async (req, res) => {
 });
 
 // remove movie from favorites
-app.delete('/users/:id/favorites/:movieId', async (req, res) => {
+app.delete('/users/:id/favorites/:movieId', passport.authenticate('jwt', { session: false }), async (req, res) => {
+
+  //condition to check if user changes its own data only
+  if (req.user.id !== req.params.id) {
+    return res.status(400).send('Permission denied');
+  }
+
   await users.findOneAndUpdate({ _id: req.params.id },
     { $pull: { favorites: req.params.movieId } },
     { new: true }
@@ -168,7 +171,13 @@ app.delete('/users/:id/favorites/:movieId', async (req, res) => {
 });
 
 // deregister user
-app.delete('/users/:id', async (req, res) => {
+app.delete('/users/:id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+
+  //condition to check if user changes its own data only
+  if (req.user.id !== req.params.id) {
+    return res.status(400).send('Permission denied');
+  }
+
   await users.findOneAndDelete({ _id: req.params.id }).then((user) => {
     res.status(200).send('User was deleted.');
   })
