@@ -18,6 +18,13 @@ app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+let auth = require('./auth')(app);
+
+app.use(bodyParser.urlencoded({ extended: true }));
+
+const passport = require('passport');
+require('./passport');
+
 // Welcome
 app.get('/', (req, res) => {
   res.send('Welcome! MovieMate is your ultimate companion for exploring the world of cinema!');
