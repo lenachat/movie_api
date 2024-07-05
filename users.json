@@ -1,0 +1,4 @@
+{"_id":{"$oid":"667ac2a7d2e4f08e1b79c897"},"username":"jane_smith","email":"jane.smith@example.com","birthday":{"$date":"1990-06-15T00:00:00Z"},"favorites":[{"$oid":"667ab141d2e4f08e1b79c889"}]}
+{"_id":{"$oid":"667ac2ebd2e4f08e1b79c898"},"username":"alice_jones","email":"alice.jones@example.com","birthday":{"$date":"1982-11-08T00:00:00Z"},"favorites":[{"$oid":"667ab11ad2e4f08e1b79c888"}]}
+{"_id":{"$oid":"667ac311d2e4f08e1b79c899"},"username":"bob_brown","email":"bob.brown@example.com","birthday":{"$date":"1978-03-22T00:00:00Z"},"favorites":[{"$oid":"667ab1c5d2e4f08e1b79c88e"}]}
+{"_id":{"$oid":"667ac344d2e4f08e1b79c89a"},"username":"charlie_white","email":"charlie.white@example.com","birthday":{"$date":"1995-12-05T00:00:00Z"},"favorites":[{"$oid":"667ab11ad2e4f08e1b79c888"},{"$oid":"667ab0fad2e4f08e1b79c887"}]}

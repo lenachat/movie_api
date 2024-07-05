@@ -10,7 +10,10 @@ const { check, validationResult } = require('express-validator');
 const movies = models.movie;
 const users = models.user;
 
-mongoose.connect('mongodb://127.0.0.1:27017/moviemateDB',
+//mongoose.connect('mongodb://127.0.0.1:27017/moviemateDB',
+//{ useNewUrlParser: true, useUnifiedTopology: true });
+
+mongoose.connect(process.env.CONNECTION_URI,
   { useNewUrlParser: true, useUnifiedTopology: true });
 
 const app = express();
