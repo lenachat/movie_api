@@ -144,17 +144,19 @@ app.put('/users/:id', passport.authenticate('jwt', { session: false }),
       return res.status(422).json({ errors: errors.array() });
     }
 
+
     //condition to check if user changes its own data only
     if (req.user.id !== req.params.id) {
       return res.status(400).send('Permission denied');
     }
 
+    let hashedPassword = users.hashPassword(req.body.password);
     await users.findOneAndUpdate(
       { _id: req.params.id },
       {
         $set: {
           username: req.body.username,
-          password: req.body.password,
+          password: hashedPassword,
           email: req.body.email,
           birthday: req.body.birthday
         }
