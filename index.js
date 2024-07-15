@@ -39,7 +39,7 @@ app.get('/', (req, res) => {
 });
 
 // get complete movie list
-app.get('/movies', async (req, res) => {
+app.get('/movies', passport.authenticate('jwt', { session: false }), async (req, res) => {
   movies.find()
     .then((movies) => {
       res.status(200).json(movies);
