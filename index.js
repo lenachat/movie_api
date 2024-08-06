@@ -125,6 +125,23 @@ app.post('/users',
       });
   });
 
+// get user data by ID
+app.get('/users/:id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+
+  //condition to check if user changes its own data only
+  if (req.user.id !== req.params.id) {
+    return res.status(400).send('Permission denied');
+  }
+
+  await users.findById({ _id: req.params.id })
+    .then((user) => {
+      res.status(200).json(user);
+    }).catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
+})
+
 // update user data
 app.put('/users/:id', passport.authenticate('jwt', { session: false }),
 
