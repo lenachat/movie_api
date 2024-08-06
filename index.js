@@ -129,38 +129,36 @@ app.post('/users',
 app.put('/users/:id', passport.authenticate('jwt', { session: false }),
 
   [
-    check('username', 'Username is required.').isLength({ min: 2 }),
-    check('username', 'Username must not contain non alphanumeric characters.').isAlphanumeric(),
-    check('password', 'Password is required. Minimum length 8 characters.').isLength({ min: 8 }),
-    check('email', 'Email address is required.').not().isEmpty(),
-    check('email', 'Email address is not valid.').isEmail(),
+    check('username', 'Username is required.').optional().isLength({ min: 2 }),
+    check('username', 'Username must not contain non alphanumeric characters.').optional().isAlphanumeric(),
+    check('password', 'Password is required. Minimum length 8 characters.').optional().isLength({ min: 8 }),
+    check('email', 'Email address is required.').optional().not().isEmpty(),
+    check('email', 'Email address is not valid.').optional().isEmail(),
   ],
 
 
   async (req, res) => {
-
     let errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
     }
-
 
     //condition to check if user changes its own data only
     if (req.user.id !== req.params.id) {
       return res.status(400).send('Permission denied');
     }
 
-    let hashedPassword = users.hashPassword(req.body.password);
+    //building the update object dynamically
+    let updateObject = {};
+    if (req.body.username) { updateObject.username = req.body.username };
+    if (req.body.password) { updateObject.password = users.hashPassword(req.body.password) };
+    if (req.body.email) { updateObject.email = req.body.email };
+    if (req.body.birthday) { updateObject.birthday = req.body.birthday };
+
+    //let hashedPassword = users.hashPassword(req.body.password);
     await users.findOneAndUpdate(
       { _id: req.params.id },
-      {
-        $set: {
-          username: req.body.username,
-          password: hashedPassword,
-          email: req.body.email,
-          birthday: req.body.birthday
-        }
-      },
+      { $set: updateObject },
       { new: true }
     ).then((updatedUser) => {
       res.status(200).json(updatedUser);
