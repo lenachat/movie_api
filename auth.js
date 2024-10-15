@@ -14,7 +14,16 @@ let generateJWTToken = (user) => {
   });
 }
 
-/* POST login */
+/**
+ * Route to handle user login and generate a JWT token.
+ * @tags POST /login
+ * @param {object} req - Express request object, containing username and password.
+ * @param {object} res - Express response object.
+ * @returns {object} - 200 Success response - user data and JWT token.
+ * @returns {Error} - 400 Error response - if login fails.
+ * @returns {Error} - 500 Error response - server error.
+ */
+
 module.exports = (router) => {
   router.post('/login', (req, res) => {
     passport.authenticate('local', { session: false }, (err, user, info) => {
