@@ -35,99 +35,13 @@ require('./passport');
 
 /**
  * Route to display a welcome message on the homepage.
- * @tags GET /
- * @returns {string} - 200 Success response - Welcome message
  */
 app.get('/', (req, res) => {
   res.send('Welcome! MovieMate is your ultimate companion for exploring the world of cinema!');
 });
 
 /**
- * Route to retrieve all movies.
- * @tags GET movies
- * @param {string} path
- * @param {function} middleware - JWT authentication.
- * @returns {object} - 200 Success response - list of movies
- * @returns {Error} - 500 Error respone - server error message
- * @example
- * Request data format: none
- * Response data format: JSON
- * Response example:
- * [
- *  {
- *    "_id": "34576498fh3945hv039h2",
- *     "title": "Hidden Figures",
- *     "description": "The story of a team of female African-American mathematicians who served a vital role 
- *      in NASA during the early years of the U.S. space program.",
- *     "genre": {
- *       "name": "Drama",
- *       "description": "Drama is a film genre that emphasizes realistic storytelling and character development, 
- *        often dealing with serious, emotional, and thought-provoking themes. It focuses on the internal and 
- *        external conflicts of characters, aiming to evoke a strong emotional response from the audience.",
- *     },
- *     "director": {
- *       "name": "Theodore Melfi",
- *       "biography": "Theodore Melfi is an American film director, screenwriter, 
- *        and producer known for his work on the films \"St. Vincent\" and \"Hidden Figures\".",
- *       "birth": "1970",
- *       "death": ""
- *     },
- *     "actors": ["Taraji P. Henson", "Octavia Spencer", "Janelle Monáe"],
- *     "imagePath": "https://m.media-amazon.com/images/M/MV5BMjQxOTkxODUyN15BMl5BanBnXkFtZTgwNTU3NTM3OTE@._V1_.jpg",
- *     "age": "0",
- *     "rating": "7.8",
- *     "year": "2016",
- *     "length": "127 min"
- *   },
- *  {...}
- * ]
- */
-app.get('/movies', passport.authenticate('jwt', { session: false }), async (req, res) => {
-  movies.find()
-    .then((movies) => {
-      res.status(200).json(movies);
-    }).catch((err) => {
-      console.error(err);
-      res.status(500).send('Error: ' + err);
-    });
-});
-
-/**
- * Route to retrieve information about a specific movie by title.
- * @tags GET movies/:title
- * @param {string} path - Movie title as path parameter.
- * @param {function} middleware - JWT authentication.
- * @returns {object} - 200 Success response - movie information.
- * @returns {Error} - 500 Error respone - server error message.
- * @example
- * Request data format: none
- * Response data format: JSON
- * Response example:
- * {
- *  "_id": "34576498fh3945hv039h2",
- *  "title": "Hidden Figures",
- *  "description": "The story of a team of female African-American mathematicians who served a vital role 
- *   in NASA during the early years of the U.S. space program.",
- *  "genre": {
- *    "name": "Drama",
- *    "description": "Drama is a film genre that emphasizes realistic storytelling and character development, 
- *     often dealing with serious, emotional, and thought-provoking themes. It focuses on the internal and 
- *     external conflicts of characters, aiming to evoke a strong emotional response from the audience.",
- *   },
- *   "director": {
- *     "name": "Theodore Melfi",
- *     "biography": "Theodore Melfi is an American film director, screenwriter, 
- *      and producer known for his work on the films \"St. Vincent\" and \"Hidden Figures\".",
- *     "birth": "1970",
- *     "death": ""
- *   },
- *   "actors": ["Taraji P. Henson", "Octavia Spencer", "Janelle Monáe"],
- *   "imagePath": "https://m.media-amazon.com/images/M/MV5BMjQxOTkxODUyN15BMl5BanBnXkFtZTgwNTU3NTM3OTE@._V1_.jpg",
- *   "age": "0",
- *   "rating": "7.8",
- *   "year": "2016",
- *   "length": "127 min"
- * }
+ * GET a list of all movies.
  */
 app.get('/movies/:title', passport.authenticate('jwt', { session: false }), async (req, res) => {
   await movies.findOne({ title: req.params.title })
@@ -140,24 +54,7 @@ app.get('/movies/:title', passport.authenticate('jwt', { session: false }), asyn
 });
 
 /**
- * Route to retrieve description of a specific genre.
- * @tags GET movies/genre/:name
- * @param {string} path - Genre name as path parameter.
- * @param {function} middleware - JWT authentication.
- * @returns {object} - 200 Success response - genre description.
- * @returns {Error} - 500 Error respone - server error message.
- * @example
- * Request data format: none
- * Response data format: JSON
- * Response example:
- * {
- *   "genre": {
- *    "name": "Drama",
- *    "description": "Drama is a film genre that emphasizes realistic storytelling and character development, 
- *     often dealing with serious, emotional, and thought-provoking themes. It focuses on the internal and 
- *     external conflicts of characters, aiming to evoke a strong emotional response from the audience."
- *   }
- * }
+ * GET data of a specific genre by name.
  */
 app.get('/movies/genre/:name', passport.authenticate('jwt', { session: false }), async (req, res) => {
   await movies.findOne({ "genre.name": req.params.name })
@@ -170,25 +67,7 @@ app.get('/movies/genre/:name', passport.authenticate('jwt', { session: false }),
 });
 
 /**
- * Route to retrieve information about a specific director by name.
- * @tags GET movies/director/:name
- * @param {string} path - Director name as path parameter.
- * @param {function} middleware - JWT authentication.
- * @returns {object} - 200 Success response - director information.
- * @returns {Error} - 500 Error respone - server error message.
- * @example
- * Request data format: none
- * Response data format: JSON
- * Response example:
- * {
- *   "director": {
- *     "name": "Theodore Melfi",
- *     "biography": "Theodore Melfi is an American film director, screenwriter, 
- *      and producer known for his work on the films \"St. Vincent\" and \"Hidden Figures\".",
- *     "birth": "1970",
- *     "death": ""
- *   }
- * }
+ * GET data of a specific director by name.
  */
 app.get('/movies/director/:name', passport.authenticate('jwt', { session: false }), async (req, res) => {
   await movies.findOne({ "director.name": req.params.name })
@@ -201,34 +80,7 @@ app.get('/movies/director/:name', passport.authenticate('jwt', { session: false 
 });
 
 /**
- * Route to register a new user.
- * @tags POST /users
- * @param {array} middleware - Validation checks for username, password, and email.
- * @param {function} middleware - Hashes password, checks if username exists, creates new user.
- * @returns {object} - 200 Success response - created user information.
- * @returns {Error} - 400 Error response - username already exists.
- * @returns {Error} - 422 Error response - validation errors.
- * @returns {Error} - 500 Error response - server error message.
- * @example
- * Request data format: JSON
- * Request example:
- * {
- *   "username": "Enisa",
- *   "password": "12345678",
- *   "email": "enisa@gmail.com",
- *   "birthday": "1985-10-02"
- * }
- * 
- * Response data format: JSON
- * Response example:
- * {
- *   "_id": "667d2898ce584ed14052eff8",
- *   "username": "Enisa",
- *   "password": "12345678",
- *   "email": "enisa@gmail.com",
- *   "birthday": "1985-10-02T00:00:00.000Z",
- *   "favorites": []
- * }
+ * POST user data to register a new user.
  */
 app.post('/users',
   [
@@ -273,25 +125,7 @@ app.post('/users',
   });
 
 /**
- * Route to get user data by ID.
- * @tags GET /users/:id
- * @param {string} path - User ID as path parameter.
- * @param {function} middleware - JWT authentication.
- * @returns {object} - 200 Success response - user information.
- * @returns {Error} - 400 Error response - permission denied.
- * @returns {Error} - 500 Error response - server error message.
- * @example
- * Request data format: none
- * Response data format: JSON
- * Response example:
- * {
- *   "_id": "667d2898ce584ed14052eff8",
- *   "username": "Enisa",
- *   "password": "12345678",
- *   "email": "enisa@gmail.com",
- *   "birthday": "1985-10-02T00:00:00.000Z",
- *   "favorites": []
- * }
+ * GET user data by ID.
  */
 app.get('/users/:id', passport.authenticate('jwt', { session: false }), async (req, res) => {
 
@@ -310,35 +144,7 @@ app.get('/users/:id', passport.authenticate('jwt', { session: false }), async (r
 })
 
 /**
- * Route to update user data.
- * @tags PUT /users/:id
- * @param {string} path - User ID as path parameter.
- * @param {array} middleware - Validation checks for username, password, and email.
- * @param {function} middleware - JWT authentication, checks if user updates their own data, updates user data.
- * @returns {object} - 200 Success response - updated user information.
- * @returns {Error} - 400 Error response - permission denied.
- * @returns {Error} - 422 Error response - validation errors.
- * @returns {Error} - 500 Error response - server error message.
- * @example
- * Request data format: JSON
- * Request example:
- * {
- *   "username": "NewUsername",
- *   "password": "newPassword",
- *   "email": "new.email@gmail.com",
- *   "birthday": "1990-03-17"
- * }
- * 
- * Response data format: JSON
- * Response example:
- * {
- *   "_id": "667d2898ce584ed14052eff8",
- *   "username": "NewUsername",
- *   "password": "newPassword",
- *   "email": "new.email@gmail.com",
- *   "birthday": "1990-03-17T00:00:00.000Z",
- *   "favorites": []
- * }
+ * PUT user data to update user information by ID.
  */
 app.put('/users/:id', passport.authenticate('jwt', { session: false }),
 
@@ -383,25 +189,7 @@ app.put('/users/:id', passport.authenticate('jwt', { session: false }),
   });
 
 /**
- * Route to add a movie to favorites.
- * @tags POST /users/:id/favorites/:movieId
- * @param {string} path - User ID and movie ID as path parameters.
- * @param {function} middleware - JWT authentication, checks if user modifies their own data.
- * @returns {object} - 200 Success response - updated user information with new favorite.
- * @returns {Error} - 400 Error response - permission denied.
- * @returns {Error} - 500 Error response - server error message.
- * @example
- * Request data format: none
- * Response data format: JSON
- * Response example:
- * {
- *   "_id": "667d2898ce584ed14052eff8",
- *   "username": "Enisa",
- *   "password": "12345678",
- *   "email": "enisa@gmail.com",
- *   "birthday": "1985-10-02T00:00:00.000Z",
- *   "favorites": ["667ab189d2e4f08e1b79c88b"] //movie ID
- * }
+ * POST to add a movie to user's list of favorites.
  */
 app.post('/users/:id/favorites/:movieId', passport.authenticate('jwt', { session: false }), async (req, res) => {
 
@@ -424,25 +212,7 @@ app.post('/users/:id/favorites/:movieId', passport.authenticate('jwt', { session
 });
 
 /**
- * Route to remove a movie from favorites.
- * @tags DELETE /users/:id/favorites/:movieId
- * @param {string} path - User ID and movie ID as path parameters.
- * @param {function} middleware - JWT authentication, checks if user modifies their own data.
- * @returns {object} - 200 Success response - updated user information with removed favorite.
- * @returns {Error} - 400 Error response - permission denied.
- * @returns {Error} - 500 Error response - server error message.
- * @example
- * Request data format: none
- * Response data format: JSON
- * Response example:
- * {
- *   "_id": "667d2898ce584ed14052eff8",
- *   "username": "Enisa",
- *   "password": "12345678",
- *   "email": "enisa@gmail.com",
- *   "birthday": "1985-10-02T00:00:00.000Z",
- *   "favorites": [""]
- * }
+ * DELETE to remove a movie from user's list of favorites.
  */
 app.delete('/users/:id/favorites/:movieId', passport.authenticate('jwt', { session: false }), async (req, res) => {
 
@@ -464,16 +234,7 @@ app.delete('/users/:id/favorites/:movieId', passport.authenticate('jwt', { sessi
 });
 
 /**
- * Route to delete a user profile.
- * @tags DELETE /users/:id
- * @param {string} path - User ID as path parameter.
- * @param {function} middleware - JWT authentication, checks if user deletes their own data.
- * @returns {object} - 200 Success response - user deletion message.
- * @returns {Error} - 400 Error response - permission denied.
- * @returns {Error} - 500 Error response - server error message.
- * * @example
- * Request data format: none
- * Response data format: string message - User was deleted.
+ * DELETE to delete a user profile from the application.
  */
 app.delete('/users/:id', passport.authenticate('jwt', { session: false }), async (req, res) => {
 
@@ -491,13 +252,17 @@ app.delete('/users/:id', passport.authenticate('jwt', { session: false }), async
     })
 });
 
-// error handling
+/**
+* Error handling middleware
+*/
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Something broke!');
 });
 
-// listen for requests
+/**
+ * Listen for port requests
+ */
 const port = process.env.PORT || 8080;
 app.listen(port, '0.0.0.0', () => {
   console.log('Listening on port ' + port);
