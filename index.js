@@ -40,8 +40,24 @@ app.get('/', (req, res) => {
   res.send('Welcome! MovieMate is your ultimate companion for exploring the world of cinema!');
 });
 
+
+
 /**
  * GET a list of all movies.
+ */
+app.get('/movies', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  movies.find()
+    .then((movies) => {
+      res.status(200).json(movies);
+    }).catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
+});
+
+
+/**
+ * GET data of a movie by title.
  */
 app.get('/movies/:title', passport.authenticate('jwt', { session: false }), async (req, res) => {
   await movies.findOne({ title: req.params.title })
